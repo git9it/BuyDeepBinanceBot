@@ -1,0 +1,15 @@
+{
+  "name": "BuyDeepBinanceBot",
+  "version": "1.0.0",
+  "description": "BuyDeepBinanceBot",
+  "main": "start.js",
+  "type": "module",
+  "dependencies": {
+    "binance-api-node": "^0.12.3",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "mongoose": "^7.0.2",
+    "query-string": "^8.1.0",
+    "ws": "^8.13.0"
+  }
+}

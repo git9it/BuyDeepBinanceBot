@@ -1,31 +1,18 @@
 import React from 'react';
 
 import { LayoutHOC } from '../layout/LayoutHOC';
+import BuyContainer from '../components/BuyContainer/BuyContainer';
+import SellContainer from '../components/SellContainer/SellContainer';
+import HistoryContainer from '../components/HistoryContainer/HistoryContainer';
+import OpenTradesContainer from '../components/OpenTradesContainer/OpenTradesContainer';
 
 function App() {
   return (
     <div className="App">
-      <input
-        type="text"
-        style={{
-          width: '150px',
-          marginRight: '10px',
-          padding: '5px',
-          borderRadius: '5px',
-          border: 'none',
-        }}
-      />
-      <button
-        style={{
-          background: 'linear-gradient(to right, #00C9FF, #92FE9D)',
-          padding: '7px 15px',
-          color: '#fff',
-          borderRadius: '5px',
-          border: 'none',
-        }}
-      >
-        Add
-      </button>
+      <BuyContainer />
+      <SellContainer />
+      <HistoryContainer /> 
+      <OpenTradesContainer/>
     </div>
   );
 }
