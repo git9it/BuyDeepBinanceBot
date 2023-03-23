@@ -1,6 +1,4 @@
 import React from 'react';
-import Dropdown from '../Dropdown/Dropdown';
- import SYMBOLS from '../../utils/constants/symbols.constants.js';
 
 function OpenTradesContainer() {
   return (
@@ -9,7 +7,6 @@ function OpenTradesContainer() {
         <h1>Open Trades</h1>
         <div>open trades here</div>
         <div>
-          <Dropdown options={SYMBOLS} />
         </div>
         <div></div>
       </section>

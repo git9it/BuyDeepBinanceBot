@@ -5,14 +5,16 @@ import BuyContainer from '../components/BuyContainer/BuyContainer';
 import SellContainer from '../components/SellContainer/SellContainer';
 import HistoryContainer from '../components/HistoryContainer/HistoryContainer';
 import OpenTradesContainer from '../components/OpenTradesContainer/OpenTradesContainer';
+import PairContainer from '../components/PairContainer/PairContainer';
+import CreateTradeContainer from '../components/CreateTradeContainer/CreateTradeContainer';
 
 function App() {
   return (
     <div className="App">
-      <BuyContainer />
-      <SellContainer />
-      <HistoryContainer /> 
-      <OpenTradesContainer/>
+      <CreateTradeContainer />
+
+      <HistoryContainer />
+      <OpenTradesContainer />
     </div>
   );
 }

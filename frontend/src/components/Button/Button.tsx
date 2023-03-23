@@ -1,8 +1,17 @@
 import React from 'react';
 import { ButtonProps } from './Button.props';
 
-function Button({ children }: ButtonProps) {
-  return <button className="px-2 py-1 text-white bg-green-700 border-solid">{children}</button>;
+function Button(props: ButtonProps) {
+  return (
+    <div className="self-center flex-shrink-0 h-full pl-2">
+      <button
+        type="submit"
+        className="inline-flex items-center justify-center px-4 py-2 text-base font-medium text-white bg-green-500 border border-transparent rounded-md shadow-sm hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+      >
+        ADD
+      </button>
+    </div>
+  );
 }
 
 export default Button;
