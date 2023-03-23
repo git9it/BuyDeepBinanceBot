@@ -7,7 +7,7 @@ const TradeSchema = new mongoose.Schema(
       required: [true, 'Please provide pair'],
       maxlength: 8,
     },
-    timeframe: {
+    timeFrame: {
       type: number,
       required: [true, 'Please provide Timeframe'],
       maxlength: 3,
@@ -17,20 +17,25 @@ const TradeSchema = new mongoose.Schema(
       enum: ['Active', 'Canceled', 'Completed'],
       default: 'Active',
     },
-    dumpVolume: {
+    volumeSold: {
       type: Number,
       required: [true, 'Please provide dump volume'],
       maxlength: 10,
     },
-    buyAmount: {
+    amountToBuy: {
       type: Number,
       required: [true, 'Please provide buy amount'],
+      maxlength: 10,
+    },
+    sellProcent: {
+      type: Number,
+      required: [true, 'Please provide sell percent'],
       maxlength: 10,
     },
     createdBy: {
       type: mongoose.Types.ObjectId,
       ref: 'User',
-      required: [true, 'Please provide user'],
+      // required: [true, 'Please provide user'],
     },
   },
   { timestamps: true }

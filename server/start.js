@@ -27,4 +27,12 @@ app.get('/', function (req, res) {
   res.send('use ws://localhost:5000/websockets');
 });
 
+app.get('/', function (req, res) {
+  res.send('use ws://localhost:5000/websockets');
+});
+
+const register = async (req, res) => {
+  const { name, email, password } = req.body
+}
+
 start();
