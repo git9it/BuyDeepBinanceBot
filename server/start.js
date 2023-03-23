@@ -2,9 +2,21 @@ import express from 'express';
 const app = express();
 import dotenv from 'dotenv';
 dotenv.config();
+import 'express-async-errors';
 import websocketServer from './websockets/index.js';
 
 import connectDB from './helpers/mongo.js';
+
+import errorHandlerMiddleware from './middleware/error-handler.js';
+import notFoundMiddleware from './middleware/not-found.js';
+
+import tradeRouter from './routes/tradeRoutes.js';
+
+app.use(express.json());
+app.use('/api/v1/trades', tradeRouter);
+
+app.use(errorHandlerMiddleware);
+app.use(notFoundMiddleware);
 
 const port = process.env.PORT || 5000;
 
@@ -22,17 +34,5 @@ const start = async () => {
     console.log(error);
   }
 };
-
-app.get('/', function (req, res) {
-  res.send('use ws://localhost:5000/websockets');
-});
-
-app.get('/', function (req, res) {
-  res.send('use ws://localhost:5000/websockets');
-});
-
-const register = async (req, res) => {
-  const { name, email, password } = req.body
-}
 
 start();
