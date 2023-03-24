@@ -8,7 +8,7 @@ const TradeSchema = new mongoose.Schema(
       maxlength: 8,
     },
     timeFrame: {
-      type: number,
+      type: Number,
       required: [true, 'Please provide Timeframe'],
       maxlength: 3,
     },

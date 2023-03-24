@@ -3,6 +3,7 @@ const app = express();
 import dotenv from 'dotenv';
 dotenv.config();
 import 'express-async-errors';
+import cors from 'cors';
 import websocketServer from './websockets/index.js';
 
 import connectDB from './helpers/mongo.js';
@@ -11,6 +12,8 @@ import errorHandlerMiddleware from './middleware/error-handler.js';
 import notFoundMiddleware from './middleware/not-found.js';
 
 import tradeRouter from './routes/tradeRoutes.js';
+
+app.use(cors());
 
 app.use(express.json());
 app.use('/api/v1/trades', tradeRouter);
