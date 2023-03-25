@@ -6,6 +6,8 @@ import Dropdown from '../Dropdown/Dropdown';
 // @ts-ignore
 import SYMBOLS from '../../utils/constants/symbols.constants.js';
 import Button from '../Button/Button';
+import { createTrade } from '../../features/trade/tradeSlice';
+import { useDispatch, useSelector } from 'react-redux';
 
 const initialState = {
   pair: '',
@@ -16,16 +18,20 @@ const initialState = {
 };
 
 function CreateTradeContainer() {
+  const dispatch = useDispatch();
+  const { newTrade, isLoading } = useSelector((store) => store.trade);
   const [values, setValues] = useState(initialState);
 
-  const handleChange = (e: React.ChangeEventHandler<HTMLSelectElement>): void => {
+  const handleChange = (
+    e: React.ChangeEventHandler<HTMLSelectElement>
+  ): void => {
     // @ts-ignore
     setValues({ ...values, [e.target.name]: e.target.value });
   };
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
-    console.log(values);
     e.preventDefault();
+    dispatch(createTrade(values));
   };
 
   const updatePairValue = (value: any) => {

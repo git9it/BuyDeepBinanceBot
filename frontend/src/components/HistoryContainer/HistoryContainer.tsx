@@ -2,6 +2,7 @@ import React from 'react';
 import { getAllTrades } from '../../features/trade/tradeSlice';
 import { useDispatch, useSelector } from 'react-redux';
 
+
 function HistoryContainer() {
   const dispatch = useDispatch();
   const { allTrades, isLoading } = useSelector((store) => store.trade);
