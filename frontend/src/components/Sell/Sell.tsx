@@ -8,7 +8,7 @@ interface Props {
 
 const Sell: React.FC<Props> = ({ handleChange, values }) => {
   return (
-    <div className="flex flex-row items-center">
+    <div className="flex flex-row items-center p-3">
       <div className="flex-shrink pl-2">
         <label htmlFor="percentUp" className="sr-only">
           % up from buy price

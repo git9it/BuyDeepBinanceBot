@@ -10,10 +10,8 @@ interface Props {
 }
 
 const Buy: React.FC<Props> = ({ handleChange, values }) => {
-  
-
   return (
-    <div className="flex flex-row items-center">
+    <div className="flex flex-row items-center p-3">
       <label
         htmlFor="timeframe"
         className="block mr-2 text-sm font-light text-gray-700"
@@ -27,6 +25,7 @@ const Buy: React.FC<Props> = ({ handleChange, values }) => {
           className="block w-full py-2 pl-3 pr-10 text-base border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
           value={values.timeFrame}
           onChange={handleChange}
+     
         >
           <option value="1">1 m</option>
           <option value="3">3 m</option>

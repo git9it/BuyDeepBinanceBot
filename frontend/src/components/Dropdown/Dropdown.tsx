@@ -15,9 +15,9 @@ const Dropdown: React.FC<Props> = ({ options, updatePairValue }) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const dropdownRef = useRef<HTMLUListElement>(null);
 
-  const [selectedOption, setSelectedOption] = useState<string | null>(null);
+  const [selectedOption, setSelectedOption] = useState<string | null>('');
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
-  const [inputValue, setInputValue] = useState<string | null>(null);
+  const [inputValue, setInputValue] = useState<string | null>('');
 
   useEffect(() => {
     const handleScroll = () => {
@@ -77,7 +77,7 @@ const Dropdown: React.FC<Props> = ({ options, updatePairValue }) => {
   };
 
   return (
-    <div className="relative">
+    <div className="relative p-3">
       <input
         type="text"
         placeholder="Search..."
