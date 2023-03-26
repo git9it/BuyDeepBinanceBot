@@ -54,7 +54,7 @@ const deleteTrade = async (req, res) => {
     throw new NotFoundError(`No item with id : ${itemId}`);
   }
 
-  res.status(200).json({ msg: 'Success' });
+  res.status(200).json({ msg: 'Success', data: itemId });
 };
 
 export {
