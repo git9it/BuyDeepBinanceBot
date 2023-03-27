@@ -5,7 +5,7 @@ interface Props {
   updatePairValue: Function;
 }
 
-const Dropdown: React.FC<Props> = ({ options, updatePairValue }) => {
+const PairSelector: React.FC<Props> = ({ options, updatePairValue }) => {
   const shortedOptionsList = options.slice(0, 10);
 
   const [filteredOptions, setFilteredOptions] =
@@ -119,4 +119,4 @@ const Dropdown: React.FC<Props> = ({ options, updatePairValue }) => {
   );
 };
 
-export default Dropdown;
+export default PairSelector;

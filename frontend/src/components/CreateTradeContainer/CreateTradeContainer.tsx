@@ -2,7 +2,7 @@ import React from 'react';
 import { useState } from 'react';
 import Buy from '../Buy/Buy';
 import Sell from '../Sell/Sell';
-import Dropdown from '../Dropdown/Dropdown';
+import PairSelector from '../PairSelector/PairSelector';
 // @ts-ignore
 import SYMBOLS from '../../utils/constants/symbols.constants.js';
 import Button from '../Button/Button';
@@ -43,7 +43,7 @@ function CreateTradeContainer() {
       <div className="m-4 mx-auto overflow-hidden bg-gray-100 rounded-lg">
         <form className="form" onSubmit={onSubmit}>
           <h1>Pair</h1>
-          <Dropdown updatePairValue={updatePairValue} options={SYMBOLS} />
+          <PairSelector updatePairValue={updatePairValue} options={SYMBOLS} />
           <h1>Buy if</h1>
           <Buy handleChange={handleChange} values={values} />
           <h1>Sell if</h1>
