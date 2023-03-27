@@ -1,6 +1,10 @@
 import React from 'react';
 interface Props {
-  handleChange: (e: React.ChangeEventHandler<HTMLInputElement>) => void;
+  handleChange: (
+    e:
+      | React.ChangeEvent<HTMLSelectElement>
+      | React.ChangeEvent<HTMLInputElement>
+  ) => void;
   values: {
     sellProcent: string;
   };

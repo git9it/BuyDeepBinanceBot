@@ -1,21 +1,22 @@
 import React from 'react';
-import { getAllTrades } from '../../features/trade/tradeSlice';
-import { useDispatch, useSelector } from 'react-redux';
+// import { getAllTrades } from '../../features/trade/tradeSlice';
+// import { useDispatch, useSelector } from 'react-redux';
+// import { AppDispatch, RootState } from '../../app/store';
 
 
 function HistoryContainer() {
-  const dispatch = useDispatch();
-  const { allTrades, isLoading } = useSelector((store) => store.trade);
+  // const dispatch = useDispatch<AppDispatch>();
+  // const { allTrades, isLoading } = useSelector((store:RootState) => store.trade);
 
-  const clickHandler = () => {
-    dispatch(getAllTrades());
-  };
+  // const clickHandler = () => {
+  //   dispatch(getAllTrades());
+  // };
 
   return (
     <>
       <section className="flex flex-col p-2 bg-purple-500">
         <h1>History</h1>
-        <div>
+        {/* <div>
           <button
             className="inline-flex items-center justify-center px-4 py-2 text-base font-medium text-white bg-green-500 border border-transparent rounded-md shadow-sm hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
             onClick={clickHandler}
@@ -29,7 +30,7 @@ function HistoryContainer() {
             console
           </button>
           history here
-        </div>
+        </div> */}
       </section>
     </>
   );

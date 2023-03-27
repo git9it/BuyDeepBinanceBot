@@ -3,27 +3,25 @@ import { useEffect } from 'react';
 import { getAllTrades, deleteTrade } from '../../features/trade/tradeSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import TradeItem from '../TradeItem/TradeItem';
+import { Itrade } from '../../features/trade/tradeSlice';
+import { AppDispatch, RootState } from '../../app/store';
 
 function OpenTradesContainer() {
-  const dispatch = useDispatch();
-  const { allTrades, isLoading } = useSelector((store) => store.trade);
+  const dispatch = useDispatch<AppDispatch>();
+  const { allTrades } = useSelector((store: RootState) => store.trade);
 
   useEffect(() => {
     dispatch(getAllTrades());
   }, [dispatch]);
 
-  const handleDeleteTrade = (tradeId) => {
+  const handleDeleteTrade = (tradeId: string) => {
     dispatch(deleteTrade(tradeId));
   };
 
-if (allTrades.length === 0) {
-  return (
+  if (allTrades.length === 0) {
+    return <h2>No trades to display...</h2>;
+  }
 
-      <h2>No trades to display...</h2>
-
-  );
-}
-  
   return (
     <>
       <section className="flex flex-col p-2 bg-green-800">
@@ -38,7 +36,7 @@ if (allTrades.length === 0) {
             <div className="col-span-1">_id</div>
             <div className="col-span-1">delete</div>
           </div>
-          {allTrades.map((trade) => {
+          {allTrades.map((trade: Itrade) => {
             return (
               <TradeItem
                 handleDeleteTrade={handleDeleteTrade}

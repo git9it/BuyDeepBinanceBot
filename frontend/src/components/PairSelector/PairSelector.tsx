@@ -30,15 +30,18 @@ const PairSelector: React.FC<Props> = ({ options, updatePairValue }) => {
       }
     };
 
-    if (dropdownRef.current) {
-      dropdownRef.current.addEventListener('scroll', handleScroll);
+    const currentRef = dropdownRef.current;
+
+    if (currentRef) {
+      currentRef.addEventListener('scroll', handleScroll);
     }
 
     return () => {
-      if (dropdownRef.current) {
-        dropdownRef.current.removeEventListener('scroll', handleScroll);
+      if (currentRef) {
+        currentRef.removeEventListener('scroll', handleScroll);
       }
     };
+    // eslint-disable-next-line
   }, [filteredOptions]);
 
   const loadMoreOptions = () => {

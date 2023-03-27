@@ -7,7 +7,8 @@ import PairSelector from '../PairSelector/PairSelector';
 import SYMBOLS from '../../utils/constants/symbols.constants.js';
 import Button from '../Button/Button';
 import { createTrade } from '../../features/trade/tradeSlice';
-import { useDispatch, useSelector } from 'react-redux';
+// import { useDispatch, useSelector } from 'react-redux';
+// import { AppDispatch, RootState } from '../../app/store'
 
 const initialState = {
   pair: '',
@@ -18,19 +19,22 @@ const initialState = {
 };
 
 function CreateTradeContainer() {
-  const dispatch = useDispatch();
-  const { newTrade, isLoading } = useSelector((store) => store.trade);
+  // const dispatch = useDispatch<AppDispatch>();
+  // const { newTrade, isLoading } = useSelector((store:RootState) => store.trade);
   const [values, setValues] = useState(initialState);
 
   const handleChange = (
-    e: React.ChangeEventHandler<HTMLSelectElement>
+    e:
+      | React.ChangeEvent<HTMLSelectElement>
+      | React.ChangeEvent<HTMLInputElement>
   ): void => {
-    // @ts-ignore
+
     setValues({ ...values, [e.target.name]: e.target.value });
   };
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
+    // @ts-ignore
     dispatch(createTrade(values));
   };
 

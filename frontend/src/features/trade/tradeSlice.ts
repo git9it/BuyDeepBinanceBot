@@ -1,6 +1,18 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
+interface IcreateTrade {
+  pair: string;
+  timeFrame: string;
+  volumeSold: string;
+  amountToBuy: string;
+  sellProcent: string;
+}
+export interface Itrade extends IcreateTrade {
+  _id: string;
+  status: 'Active' | 'Canceled' | 'Completed';
+}
+
 const url = 'http://localhost:5000/api/v1/trades/';
 
 export const getAllTrades = createAsyncThunk('trade/getAllTrades', async () => {
@@ -12,7 +24,7 @@ export const getAllTrades = createAsyncThunk('trade/getAllTrades', async () => {
 
 export const createTrade = createAsyncThunk(
   'trade/createTrade',
-  async (trade) => {
+  async (trade: IcreateTrade) => {
     const { pair, timeFrame, volumeSold, amountToBuy, sellProcent } = trade;
 
     return axios
@@ -30,7 +42,7 @@ export const createTrade = createAsyncThunk(
 
 export const deleteTrade = createAsyncThunk(
   'trade/deleteTrade',
-  async (tradeId) => {
+  async (tradeId:string) => {
     return axios
       .delete(url + tradeId)
       .then((res) => res.data)
@@ -51,53 +63,41 @@ export const tradeSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(getAllTrades.pending, (state) => {
-        //@ts-ignore
         state.isLoading = true;
       })
       .addCase(getAllTrades.fulfilled, (state, action) => {
         console.log(action);
-        //@ts-ignore
+
         state.isLoading = false;
-        //@ts-ignore
+
         state.allTrades = action.payload;
       })
       .addCase(getAllTrades.rejected, (state) => {
-        //@ts-ignore
         state.isLoading = false;
       })
       .addCase(createTrade.pending, (state) => {
-        //@ts-ignore
         state.isLoading = true;
       })
       .addCase(createTrade.fulfilled, (state, action) => {
-        console.log(action);
-        //@ts-ignore
         state.isLoading = false;
-        //@ts-ignore
-        state.newTrade = action.trade;
+        state.newTrade = action.payload.trade;
         state.allTrades = state.allTrades.concat(action.payload.trade);
         console.log(state.allTrades);
       })
       .addCase(createTrade.rejected, (state) => {
-        //@ts-ignore
         state.isLoading = false;
       })
       .addCase(deleteTrade.pending, (state) => {
-        //@ts-ignore
         state.isLoading = true;
       })
       .addCase(deleteTrade.fulfilled, (state, action) => {
-        console.log(action);
-        //@ts-ignore
         state.isLoading = false;
-        //@ts-ignore
-        state.deleteTrade = action.payload;
+
         state.allTrades = state.allTrades.filter(
-          (trade) => trade._id !== action.payload.data
+          (trade: Itrade) => trade._id !== action.payload.data
         );
       })
       .addCase(deleteTrade.rejected, (state) => {
-        //@ts-ignore
         state.isLoading = false;
       });
   },

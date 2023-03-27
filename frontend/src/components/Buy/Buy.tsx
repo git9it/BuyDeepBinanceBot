@@ -1,7 +1,11 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 interface Props {
-  handleChange: (event: React.ChangeEvent<HTMLSelectElement>) => void;
+  handleChange: (
+    event:
+      | React.ChangeEvent<HTMLSelectElement>
+      | React.ChangeEvent<HTMLInputElement>
+  ) => void;
   values: {
     timeFrame: string;
     volumeSold: string;
@@ -25,7 +29,6 @@ const Buy: React.FC<Props> = ({ handleChange, values }) => {
           className="block w-full py-2 pl-3 pr-10 text-base border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
           value={values.timeFrame}
           onChange={handleChange}
-     
         >
           <option value="1">1 m</option>
           <option value="3">3 m</option>

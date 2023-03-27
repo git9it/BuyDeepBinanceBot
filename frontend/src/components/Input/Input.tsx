@@ -1,5 +1,5 @@
 import React from 'react';
-import { InputProps } from './Input.props';
+// import { InputProps } from './Input.props';
 function Input() {
   return <input className="border-solid" />;
 }
