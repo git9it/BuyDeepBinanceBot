@@ -7,9 +7,11 @@ import {
   getSingleTrade,
   deleteTrade,
   updateTrade,
+  cancelTrade,
 } from '../controllers/tradeController.js';
 
 router.route('/').post(createNewTrade).get(getAllTrades);
 router.route('/:id').get(getSingleTrade).delete(deleteTrade).patch(updateTrade);
+router.route('/cancel/:id').patch(cancelTrade);
 
 export default router;

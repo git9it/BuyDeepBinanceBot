@@ -14,7 +14,7 @@ const TradeSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      enum: ['Active', 'Canceled', 'Completed'],
+      enum: ['Active','Paused', 'Canceled', 'Completed'],
       default: 'Active',
     },
     volumeSold: {

@@ -36,20 +36,31 @@ const getSingleTrade = async (req, res) => {
 };
 
 const updateTrade = async (req, res) => {
-    const { id: itemId } = req.params;
-    const item = await Trade.findOneAndUpdate({ _id: itemId }, req.body, {
-      new: true,
-      runValidators: true,
-    });
-    if (!item) {
-      throw new NotFoundError(`No item with id : ${itemId}`);
-    }
-    res.status(200).json({ item });
+  const { id: itemId } = req.params;
+  const item = await Trade.findOneAndUpdate({ _id: itemId }, req.body, {
+    new: true,
+    runValidators: true,
+  });
+  if (!item) {
+    throw new NotFoundError(`No item with id : ${itemId}`);
+  }
+  res.status(200).json({ item });
 };
 
 const deleteTrade = async (req, res) => {
   const { id: itemId } = req.params;
   const item = await Trade.findOneAndDelete({ _id: itemId });
+  if (!item) {
+    throw new NotFoundError(`No item with id : ${itemId}`);
+  }
+
+  res.status(200).json({ msg: 'Success', data: itemId });
+};
+
+const cancelTrade = async (req, res) => {
+  console.log(req.params)
+  const { id: itemId } = req.params;
+  const item = await Trade.findByIdAndUpdate(itemId, { status: 'Canceled' });
   if (!item) {
     throw new NotFoundError(`No item with id : ${itemId}`);
   }
@@ -63,4 +74,5 @@ export {
   getSingleTrade,
   deleteTrade,
   updateTrade,
+  cancelTrade,
 };
