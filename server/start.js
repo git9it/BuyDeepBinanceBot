@@ -12,6 +12,7 @@ import errorHandlerMiddleware from './middleware/error-handler.js';
 import notFoundMiddleware from './middleware/not-found.js';
 
 import tradeRouter from './routes/tradeRoutes.js';
+import initTasks from './utils/initTasks.js';
 
 app.use(
   cors({
@@ -29,6 +30,7 @@ app.use(errorHandlerMiddleware);
 app.use(notFoundMiddleware);
 
 const port = process.env.PORT || 5000;
+const ISACTIVE = process.env.ISACTIVE;
 
 const start = async () => {
   try {
@@ -40,6 +42,11 @@ const start = async () => {
       console.log(`Server is listening on port ${port}...`);
     });
     websocketServer(server);
+
+    if (ISACTIVE === 'true') {
+      console.log('Server is active');
+      initTasks();
+    }
   } catch (error) {
     console.log(error);
   }

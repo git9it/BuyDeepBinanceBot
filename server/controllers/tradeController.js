@@ -10,6 +10,9 @@ const createNewTrade = async (req, res) => {
     if (!pair || !timeFrame || !volumeSold || !amountToBuy || !sellProcent) {
       throw new BadRequestError('please provide all values');
     }
+
+
+
     const trade = await Trade.create({
       pair,
       timeFrame,
