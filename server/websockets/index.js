@@ -1,12 +1,12 @@
 import WebSocket from 'ws';
 import queryString from 'query-string';
-import { getState } from '../api/index.js';
+import { getState } from '../api/fetchData.js';
 import createStore from '../store/createStore.js';
 import actionsReducer from '../store/actionReducer.js';
 import {
   GETPAIRPRICEBYINTERVAL,
   GETCANDLESBYINTERVAL,
-  GETALLUSERS
+  GETALLUSERS,
 } from '../store/actions.js';
 
 const store = createStore(actionsReducer);
@@ -63,9 +63,7 @@ export default async (expressServer) => {
           }
 
           if (parsedMessage.users) {
-           
-
-            store.dispatch({ type: GETALLUSERS});
+            store.dispatch({ type: GETALLUSERS });
           }
         } catch (error) {
           console.log(error);

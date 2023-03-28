@@ -1,6 +1,6 @@
 import subHelper from '../helpers/subscribe.js';
-import { getPairPriceByInterval } from '../api/index.js';
-import { getCandlesByInterval } from '../api/index.js';
+import { getPairPriceByInterval } from '../api/fetchData.js';
+import { getCandlesByInterval } from '../api/fetchData.js';
 
 import User from '../models/User.js';
 import {

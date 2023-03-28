@@ -18,7 +18,7 @@ async function getCandlesByInterval(symbol, interval = 5000) {
   const intervalID = setInterval(getCandles, interval);
   async function getCandles() {
     const date = new Date(Date.now());
-    const candles = await client.candles({ symbol: symbol, limit: 500 });
+    const candles = await client.candles({ symbol: symbol, limit: 1 });
     state = {
       data: {
         ...state?.data,
