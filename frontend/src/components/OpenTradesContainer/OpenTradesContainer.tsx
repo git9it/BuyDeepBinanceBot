@@ -41,6 +41,7 @@ function OpenTradesContainer() {
               <TradeItem
                 handleDeleteTrade={handleDeleteTrade}
                 key={trade._id}
+                showStatus={['Active']}
                 {...trade}
               />
             );

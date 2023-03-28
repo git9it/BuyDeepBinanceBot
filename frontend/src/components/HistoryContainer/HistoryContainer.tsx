@@ -1,39 +1,66 @@
 import React from 'react';
-// import { getAllTrades } from '../../features/trade/tradeSlice';
-// import { useDispatch, useSelector } from 'react-redux';
-// import { AppDispatch, RootState } from '../../app/store';
+import { useEffect } from 'react';
+import { getAllTrades, deleteTrade } from '../../features/trade/tradeSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import TradeItem from '../TradeItem/TradeItem';
+import { Itrade } from '../../features/trade/tradeSlice';
+import { AppDispatch, RootState } from '../../app/store';
 
+const showArray = ['Canceled','Paused','Completed']
 
-function HistoryContainer() {
-  // const dispatch = useDispatch<AppDispatch>();
-  // const { allTrades, isLoading } = useSelector((store:RootState) => store.trade);
+function OpenTradesContainer() {
+  const dispatch = useDispatch<AppDispatch>();
+  const { allTrades } = useSelector((store: RootState) => store.trade);
 
-  // const clickHandler = () => {
-  //   dispatch(getAllTrades());
-  // };
+  useEffect(() => {
+    dispatch(getAllTrades());
+  }, [dispatch]);
+
+  const handleDeleteTrade = (tradeId: string) => {
+    dispatch(deleteTrade(tradeId));
+  };
+
+  if (allTrades.length === 0) {
+    return <h2>No trades to display...</h2>;
+  }
+
+  const shouldRender = allTrades.some((trade:Itrade) =>
+    showArray.includes(trade.status)
+  );
+  if (!shouldRender){
+    return <h2>No history to display...</h2>
+  }
 
   return (
     <>
       <section className="flex flex-col p-2 bg-purple-500">
         <h1>History</h1>
-        {/* <div>
-          <button
-            className="inline-flex items-center justify-center px-4 py-2 text-base font-medium text-white bg-green-500 border border-transparent rounded-md shadow-sm hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
-            onClick={clickHandler}
-          >
-            getalltrades
-          </button>
-          <button
-            className="inline-flex items-center justify-center px-4 py-2 text-base font-medium text-white bg-green-500 border border-transparent rounded-md shadow-sm hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
-            onClick={() => console.log('allTrades: ' + allTrades[0]._id)}
-          >
-            console
-          </button>
-          history here
-        </div> */}
+        <div className="mx-auto overflow-hidden bg-gray-100 rounded-lg max-">
+          <div className="grid grid-cols-7 gap-4 px-4 py-2 font-medium text-gray-600 uppercase border-b border-gray-200 shrink-0">
+            <div className="col-span-1">pair</div>
+            <div className="col-span-1">sellPercent</div>
+            <div className="col-span-1">status</div>
+            <div className="col-span-1">timeFrame</div>
+            <div className="col-span-1">volumeSold</div>
+            <div className="col-span-1">_id</div>
+            <div className="col-span-1">delete</div>
+          </div>
+          {allTrades.map((trade: Itrade) => {
+            return (
+              <TradeItem
+                handleDeleteTrade={handleDeleteTrade}
+                key={trade._id}
+                showStatus={showArray}
+                {...trade}
+              />
+            );
+          })}
+        </div>
+        <div></div>
+        <div></div>
       </section>
     </>
   );
 }
 
-export default HistoryContainer;
+export default OpenTradesContainer;
