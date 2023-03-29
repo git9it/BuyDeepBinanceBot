@@ -1,6 +1,15 @@
 import Trade from '../models/Trade.js';
 import BadRequestError from '../errors/bad-request.js';
 import NotFoundError from '../errors/not-found.js';
+import createStore from '../store/createStore.js';
+import actionsReducer from '../store/actionReducer.js';
+import {
+  GETPAIRPRICEBYINTERVAL,
+  GETCANDLESBYINTERVAL,
+  GETALLUSERS,
+} from '../store/actions.js';
+
+const store = createStore(actionsReducer);
 
 const createNewTrade = async (req, res) => {
   console.log(req.body);
@@ -20,6 +29,7 @@ const createNewTrade = async (req, res) => {
       amountToBuy,
       sellProcent,
     });
+    store.dispatch({ type: GETCANDLESBYINTERVAL, payload: pair });
     res.status(200).json({ trade });
   }
 };

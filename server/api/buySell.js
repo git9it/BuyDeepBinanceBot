@@ -3,9 +3,9 @@ import order from '../mocks/buyMock.js';
 
 async function buyAsset(symbol, quantity) {
   const newTrade = await order({
-    symbol: 'XLMETH',
+    symbol: symbol,
     side: 'BUY',
-    quantity: '100',
+    quantity: quantity,
     type: 'MARKET',
   });
  return newTrade

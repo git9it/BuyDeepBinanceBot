@@ -18,7 +18,7 @@ const initTasks = async () => {
   for (const trade of activeTrades) {
     store.dispatch({ type: GETCANDLESBYINTERVAL, payload: trade.pair });
   }
-  console.log(store.getState())
+
 };
 
 export default initTasks;
