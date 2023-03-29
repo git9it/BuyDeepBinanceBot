@@ -13,6 +13,7 @@ import notFoundMiddleware from './middleware/not-found.js';
 
 import tradeRouter from './routes/tradeRoutes.js';
 import initTasks from './utils/initTasks.js';
+import  runBuyer  from './main-controller.js';
 
 app.use(
   cors({
@@ -46,6 +47,7 @@ const start = async () => {
     if (ISACTIVE === 'true') {
       console.log('Server is active');
       initTasks();
+      runBuyer(5000);
     }
   } catch (error) {
     console.log(error);
