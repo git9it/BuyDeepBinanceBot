@@ -9,6 +9,7 @@ import {
   GETALLUSERS,
 } from '../store/actions.js';
 
+
 const store = createStore(actionsReducer);
 
 //create websocket server
@@ -65,6 +66,8 @@ export default async (expressServer) => {
           if (parsedMessage.users) {
             store.dispatch({ type: GETALLUSERS });
           }
+
+
         } catch (error) {
           console.log(error);
         }
