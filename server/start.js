@@ -1,3 +1,5 @@
+// start.js
+
 import express from 'express';
 const app = express();
 import dotenv from 'dotenv';
@@ -13,7 +15,9 @@ import notFoundMiddleware from './middleware/not-found.js';
 
 import tradeRouter from './routes/tradeRoutes.js';
 import initTasks from './utils/initTasks.js';
-import  runBuyer  from './main-controller.js';
+import runBuyer from './main-controller.js';
+
+import consoleLogMiddleware from './middleware/logger.js';
 
 app.use(
   cors({
@@ -24,27 +28,25 @@ app.use(
   })
 );
 
-app.use(express.json());
-app.use('/api/v1/trades', tradeRouter);
+const server = app.listen(process.env.PORT || 5000, () => {
+  console.log(`Server is listening on port ${server.address().port}...`);
+});
 
-app.use(errorHandlerMiddleware);
-app.use(notFoundMiddleware);
-
-const port = process.env.PORT || 5000;
-const ISACTIVE = process.env.ISACTIVE;
-
-const start = async () => {
+(async () => {
   try {
     await connectDB(process.env.MONGO_URI).then(() => {
       console.log('Connected to MongoDB');
     });
 
-    let server = app.listen(port, () => {
-      console.log(`Server is listening on port ${port}...`);
-    });
-    websocketServer(server);
+    const wss = await websocketServer(server);
+    app.use(consoleLogMiddleware(wss));
+    app.use(express.json());
+    app.use('/api/v1/trades', tradeRouter);
+    app.use(errorHandlerMiddleware);
+    app.use(notFoundMiddleware);
 
-    if (ISACTIVE === 'true') {
+    const ISACTIVE = process.env.ISACTIVE;
+    if (ISACTIVE === 'tru') {
       console.log('Server is active');
       initTasks();
       runBuyer(5000);
@@ -52,6 +54,4 @@ const start = async () => {
   } catch (error) {
     console.log(error);
   }
-};
-
-start();
+})();
