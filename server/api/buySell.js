@@ -10,6 +10,13 @@ async function buyAsset(symbol, quantity) {
   });
  return newTrade
 }
-async function sellAsset() {}
+async function sellAsset(symbol, quantity, price) {
+  return await order({
+    symbol: symbol,
+    side: 'SELL',
+    quantity: quantity,
+    price: price,
+  });
+}
 
 export { buyAsset, sellAsset };
