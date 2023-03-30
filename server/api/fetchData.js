@@ -25,7 +25,7 @@ async function getCandlesByInterval(symbol, interval = 10000) {
     state = {
       data: {
         ...state?.data,
-        candles: { ...state?.data?.candles, [symbol]: { ...candles } },
+        candles: { ...state?.data?.candles, [symbol]: { ...candles }, updated: Date.time },
       },
     };
     console.log(`${date}: ${JSON.stringify(state)}`);
