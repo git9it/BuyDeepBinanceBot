@@ -1,4 +1,4 @@
-import { buyAsset } from './api/buySell.js';
+import { buyAsset, sellAsset } from './api/buySell.js';
 import { getState, stopFetching } from './api/fetchData.js';
 import Trade from './models/Trade.js';
 
@@ -10,31 +10,54 @@ async function getActiveTrades() {
 
 // Check if a trade should be bought
 function shouldBuyTrade(state, trade) {
-  console.log('should buy trade' + trade);
-  console.log('should buy state' + JSON.stringify(state));
   const { pair, volumeSold } = trade;
   if (state?.data?.candles?.[pair]) {
     const baseAssetVolume = state.data.candles[pair][0].baseAssetVolume;
-    // console.log('statedata....' + JSON.stringify(state.data.candles[pair]));
-    console.log('baseAssetVolume', baseAssetVolume);
-    console.log('volumeSold', volumeSold);
-    console.log(volumeSold >= baseAssetVolume);
+
     return baseAssetVolume >= volumeSold;
   }
   return false;
 }
 
-async function deleteTradeFromDB(tradeId) {
-  return Trade.deleteOne({ _id: tradeId });
+async function newStatusTradeDB(tradeId) {
+  const newStatus = { status: 'Completed' };
+  const item = await Trade.findOneAndUpdate({ _id: tradeId }, newStatus);
+  return item;
+}
+
+// Calculate the weighted average price
+function calculateAveragePrice(fills){
+let totalCost = 0;
+let totalQty = 0;
+
+for (const fill of fills) {
+  totalCost += parseFloat(fill.price) * parseFloat(fill.qty);
+  totalQty += parseFloat(fill.qty);
+}
+
+return totalCost / totalQty;
+}
+
+function priceWithInterest(avgPrice, procent){
+  return avgPrice * (1 + procent / 100);
 }
 
 // Buy a trade and return the result
 async function buyTrade(trade) {
-  const { pair, amountToBuy } = trade;
+  const { pair, amountToBuy, sellProcent } = trade;
   const result = await buyAsset(pair, amountToBuy);
-  deleteTradeFromDB(trade._id);
-  stopFetching(pair)
+   const averagePrice = calculateAveragePrice(result.fills);
+const sellPrice = priceWithInterest(averagePrice, sellProcent)
+  newStatusTradeDB(trade._id);
+  stopFetching(pair);
+  sellAsset(pair, amountToBuy, sellPrice);
+ 
   return result;
+}
+
+async function placeSellOrder(){
+
+
 }
 
 // Buy all trades that should be bought
