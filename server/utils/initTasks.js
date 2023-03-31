@@ -1,4 +1,4 @@
-import Trade from '../models/Trade.js';
+import Trade from '../models/BuyTrade.js';
 import createStore from '../store/createStore.js';
 import actionsReducer from '../store/actionReducer.js';
 import {
@@ -18,7 +18,6 @@ const initTasks = async () => {
   for (const trade of activeTrades) {
     store.dispatch({ type: GETCANDLESBYINTERVAL, payload: trade.pair });
   }
-
 };
 
 export default initTasks;

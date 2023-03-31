@@ -8,7 +8,7 @@ import {
   deleteTrade,
   updateTrade,
   cancelTrade,
-} from '../controllers/tradeController.js';
+} from '../controllers/buyTradeController.js';
 
 router.route('/').post(createNewTrade).get(getAllTrades);
 router.route('/:id').get(getSingleTrade).delete(deleteTrade).patch(updateTrade);

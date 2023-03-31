@@ -1,7 +1,6 @@
 async function order(params) {
   await new Promise((resolve) => setTimeout(resolve, 1000));
 
-
   return {
     symbol: params.symbol,
     orderId: Math.floor(Math.random() * 1000000),
@@ -14,7 +13,16 @@ async function order(params) {
     timeInForce: 'GTC',
     type: params.type,
     side: params.side,
+    fills: [
+      {
+        price: '317.19000000',
+        qty: params.quantity,
+        commission: '0.00000000',
+        commissionAsset: 'BNB',
+        tradeId: 171063,
+      },
+    ],
   };
 }
 
-export default order
+export default order;

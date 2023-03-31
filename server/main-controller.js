@@ -1,6 +1,7 @@
 import { buyAsset, sellAsset } from './api/buySell.js';
 import { getState, stopFetching } from './api/fetchData.js';
-import Trade from './models/Trade.js';
+import Trade from './models/BuyTrade.js';
+import SellTrade from './models/SellTrade.js';
 
 // Get active trades from database
 async function getActiveTrades() {
@@ -26,38 +27,53 @@ async function newStatusTradeDB(tradeId) {
 }
 
 // Calculate the weighted average price
-function calculateAveragePrice(fills){
-let totalCost = 0;
-let totalQty = 0;
+function calculateAveragePrice(fills) {
+  let totalCost = 0;
+  let totalQty = 0;
 
-for (const fill of fills) {
-  totalCost += parseFloat(fill.price) * parseFloat(fill.qty);
-  totalQty += parseFloat(fill.qty);
+  for (const fill of fills) {
+    totalCost += parseFloat(fill.price) * parseFloat(fill.qty);
+    totalQty += parseFloat(fill.qty);
+  }
+
+  return totalCost / totalQty;
 }
 
-return totalCost / totalQty;
-}
-
-function priceWithInterest(avgPrice, procent){
+function priceWithInterest(avgPrice, procent) {
   return avgPrice * (1 + procent / 100);
 }
 
 // Buy a trade and return the result
 async function buyTrade(trade) {
-  const { pair, amountToBuy, sellProcent } = trade;
+  const { pair, amountToBuy } = trade;
   const result = await buyAsset(pair, amountToBuy);
-   const averagePrice = calculateAveragePrice(result.fills);
-const sellPrice = priceWithInterest(averagePrice, sellProcent)
+  const averagePrice = calculateAveragePrice(result.fills);
+
   newStatusTradeDB(trade._id);
   stopFetching(pair);
-  sellAsset(pair, amountToBuy, sellPrice);
- 
+  placeSellOrder(trade, averagePrice);
+
   return result;
 }
 
-async function placeSellOrder(){
+async function placeSellOrder(trade, averagePrice) {
+  const { sellProcent, pair, amountToBuy, _id } = trade;
+  // sell the same amount we bought
+  const amountToSell = amountToBuy;
+  const sellPrice = priceWithInterest(averagePrice, sellProcent);
+  const result = await sellAsset(pair, amountToSell, sellPrice);
+  const binanceTradeID = result.clientOrderId;
+  const tradeDB = await SellTrade.create({
+    pair,
+    buyPrice: averagePrice,
+    sellPrice,
+    amountToSell,
+    binanceTradeID,
+    buyTrade: _id,
+  });
 
-
+  console.log('sell trade: ' + tradeDB);
+  return tradeDB;
 }
 
 // Buy all trades that should be bought

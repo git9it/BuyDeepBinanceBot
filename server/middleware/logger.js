@@ -1,7 +1,10 @@
 import WebSocket from 'ws';
 
+
 function consoleLogMiddleware(wss) {
+
   return function (req, res, next) {
+
     const consoleLog = console.log;
     console.log = function () {
       const logData = {

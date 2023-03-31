@@ -14,6 +14,7 @@ import errorHandlerMiddleware from './middleware/error-handler.js';
 import notFoundMiddleware from './middleware/not-found.js';
 
 import tradeRouter from './routes/tradeRoutes.js';
+import sellTradeRouter from './routes/sellTradeRoutes.js';
 import initTasks from './utils/initTasks.js';
 import runBuyer from './main-controller.js';
 
@@ -42,11 +43,12 @@ const server = app.listen(process.env.PORT || 5000, () => {
     app.use(consoleLogMiddleware(wss));
     app.use(express.json());
     app.use('/api/v1/trades', tradeRouter);
+    app.use('/api/v1/selltrades/', sellTradeRouter);
     app.use(errorHandlerMiddleware);
     app.use(notFoundMiddleware);
 
     const ISACTIVE = process.env.ISACTIVE;
-    if (ISACTIVE === 'tru') {
+    if (ISACTIVE === 'true') {
       console.log('Server is active');
       initTasks();
       runBuyer(5000);

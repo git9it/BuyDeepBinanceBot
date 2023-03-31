@@ -1,4 +1,4 @@
-import Trade from '../models/Trade.js';
+import Trade from '../models/BuyTrade.js';
 import BadRequestError from '../errors/bad-request.js';
 import NotFoundError from '../errors/not-found.js';
 import createStore from '../store/createStore.js';
@@ -19,8 +19,6 @@ const createNewTrade = async (req, res) => {
     if (!pair || !timeFrame || !volumeSold || !amountToBuy || !sellProcent) {
       throw new BadRequestError('please provide all values');
     }
-
-
 
     const trade = await Trade.create({
       pair,
@@ -71,7 +69,7 @@ const deleteTrade = async (req, res) => {
 };
 
 const cancelTrade = async (req, res) => {
-  console.log(req.params)
+  console.log(req.params);
   const { id: itemId } = req.params;
   const item = await Trade.findByIdAndUpdate(itemId, { status: 'Canceled' });
   if (!item) {

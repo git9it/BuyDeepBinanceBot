@@ -25,10 +25,37 @@ async function getCandlesByInterval(symbol, interval = 10000) {
     state = {
       data: {
         ...state?.data,
-        candles: { ...state?.data?.candles, [symbol]: { ...candles }, updated: Date.time },
+        candles: {
+          ...state?.data?.candles,
+          [symbol]: { ...candles },
+          updated: date,
+        },
       },
     };
     console.log(`${date}: ${JSON.stringify(state)}`);
+  }
+}
+
+async function checkOpenedSellTradeByInterval(tradeID, symbol) {
+  const tenMinutes = 1000 * 60 * 10;
+  const intervalID = setInterval(getOpenedSellTrade, tenMinutes);
+  async function getOpenedSellTrade() {
+    const date = new Date(Date.now());
+    const order = await client.getOrder({
+      symbol: symbol,
+      orderId: tradeID,
+    });
+
+    state = {
+      data: {
+        ...state?.data,
+        orders: {
+          ...state?.data?.orders,
+          [tradeID]: { ...order },
+          updated: date,
+        },
+      },
+    };
   }
 }
 
@@ -42,4 +69,10 @@ function stopFetching(symbol) {
   delete intervalIDsStore[symbol];
 }
 
-export { getPairPriceByInterval, getCandlesByInterval, getState, stopFetching };
+export {
+  getPairPriceByInterval,
+  getCandlesByInterval,
+  getState,
+  checkOpenedSellTradeByInterval,
+  stopFetching,
+};
