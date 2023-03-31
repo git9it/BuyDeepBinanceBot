@@ -10,7 +10,7 @@ interface IcreateTrade {
 }
 export interface Itrade extends IcreateTrade {
   _id: string;
-  status: 'Active' | 'Canceled' | 'Completed';
+  status: 'Active' | 'Canceled' | 'Paused' | 'Completed';
 }
 
 const url = 'http://localhost:5000/api/v1/trades/';
