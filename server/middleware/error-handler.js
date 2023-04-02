@@ -1,5 +1,5 @@
 const errorHandlerMiddleware = (err, req, res, next) => {
-  console.log('error');
+
   const defaultError = {
     statusCode: err.statusCode || 500,
     msg: err.message || 'Something went wrong, try again later',
@@ -15,7 +15,10 @@ const errorHandlerMiddleware = (err, req, res, next) => {
     defaultError.statusCode = 400;
     defaultError.msg = `${Object.keys(err.keyValue)} field has to be unique`;
   }
-
+  console.log(
+    'ERROR HANDLER IN THE GAME==================================== ' + err.name
+  );
+  // console.log(defaultError.msg);
   res.status(defaultError.statusCode).json({ msg: defaultError.msg });
 };
 

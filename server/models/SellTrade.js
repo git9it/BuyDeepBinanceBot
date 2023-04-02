@@ -10,17 +10,17 @@ const TradeSchema = new mongoose.Schema(
     buyPrice: {
       type: String,
       required: [true, 'Please provide buy price'],
-      maxlength: 8,
+      maxlength: 12,
     },
     sellPrice: {
       type: String,
       required: [true, 'Please provide sell price'],
-      maxlength: 8,
+      maxlength: 12,
     },
     amountToSell: {
       type: String,
       required: [true, 'Please provide amount to sell price'],
-      maxlength: 8,
+      maxlength: 12,
     },
     binanceTradeID: {
       type: String,

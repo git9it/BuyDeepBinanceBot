@@ -6,7 +6,7 @@ import TradeItem from '../TradeItem/TradeItem';
 import { Itrade } from '../../features/trade/tradeSlice';
 import { AppDispatch, RootState } from '../../app/store';
 
-const showArray = ['Canceled','Paused','Completed']
+const showArray = ['Canceled', 'Paused', 'Completed', 'Error'];
 
 function OpenTradesContainer() {
   const dispatch = useDispatch<AppDispatch>();
@@ -24,11 +24,11 @@ function OpenTradesContainer() {
     return <h2>No trades to display...</h2>;
   }
 
-  const shouldRender = allTrades.some((trade:Itrade) =>
+  const shouldRender = allTrades.some((trade: Itrade) =>
     showArray.includes(trade.status)
   );
-  if (!shouldRender){
-    return <h2>No history to display...</h2>
+  if (!shouldRender) {
+    return <h2>No history to display...</h2>;
   }
 
   return (

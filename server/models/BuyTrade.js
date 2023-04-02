@@ -14,7 +14,7 @@ const TradeSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      enum: ['Active','Paused', 'Canceled', 'Completed'],
+      enum: ['Active', 'Paused', 'Canceled', 'Completed', 'Error'],
       default: 'Active',
     },
     volumeSold: {
@@ -25,12 +25,15 @@ const TradeSchema = new mongoose.Schema(
     amountToBuy: {
       type: Number,
       required: [true, 'Please provide buy amount'],
-      maxlength: 10,
+      maxlength: 12,
     },
     sellProcent: {
       type: Number,
       required: [true, 'Please provide sell percent'],
-      maxlength: 10,
+      maxlength: 3,
+    },
+    error: {
+      type: String,
     },
     createdBy: {
       type: mongoose.Types.ObjectId,
