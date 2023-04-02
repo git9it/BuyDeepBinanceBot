@@ -2,11 +2,16 @@ import { buyAsset, sellAsset } from './api/buySell.js';
 import { getState, stopFetching } from './api/fetchData.js';
 import Trade from './models/BuyTrade.js';
 import SellTrade from './models/SellTrade.js';
+import 'express-async-errors';
 
 // Get active trades from database
 async function getActiveTrades() {
   const trades = await Trade.find();
-  return trades.filter((trade) => trade.status.includes('Active'));
+  const activeTrades = trades.filter((trade) =>
+    trade.status.includes('Active')
+  );
+  console.log(`Found ${activeTrades.length} active trades`);
+  return activeTrades;
 }
 
 // Check if a trade should be bought
@@ -14,7 +19,11 @@ function shouldBuyTrade(state, trade) {
   const { pair, volumeSold } = trade;
   if (state?.data?.candles?.[pair]) {
     const baseAssetVolume = state.data.candles[pair][0].baseAssetVolume;
-
+    console.log(
+      `[${pair}]: Now volume is ${baseAssetVolume}. Minimal volume for buy is ${volumeSold}. Should i buy?... ${
+        baseAssetVolume >= volumeSold ? 'Yes' : 'No'
+      }`
+    );
     return baseAssetVolume >= volumeSold;
   }
   return false;
@@ -47,13 +56,19 @@ function priceWithInterest(avgPrice, procent) {
 async function buyTrade(trade) {
   const { pair, amountToBuy } = trade;
   const result = await buyAsset(pair, amountToBuy);
-  const averagePrice = calculateAveragePrice(result.fills);
+  if (result) {
+    const averagePrice = calculateAveragePrice(result.fills);
 
-  newStatusTradeDB(trade._id);
-  stopFetching(pair);
-  placeSellOrder(trade, averagePrice);
-
-  return result;
+    newStatusTradeDB(trade._id);
+    stopFetching(pair);
+    placeSellOrder(trade, averagePrice);
+    console.log(
+      `Bought ${pair}! Amount: ${amountToBuy} Price: ${averagePrice}`
+    );
+    return result;
+  } else {
+    console.log('Buying failed');
+  }
 }
 
 async function placeSellOrder(trade, averagePrice) {
@@ -61,19 +76,28 @@ async function placeSellOrder(trade, averagePrice) {
   // sell the same amount we bought
   const amountToSell = amountToBuy;
   const sellPrice = priceWithInterest(averagePrice, sellProcent);
+
   const result = await sellAsset(pair, amountToSell, sellPrice);
   const binanceTradeID = result.clientOrderId;
-  const tradeDB = await SellTrade.create({
-    pair,
-    buyPrice: averagePrice,
-    sellPrice,
-    amountToSell,
-    binanceTradeID,
-    buyTrade: _id,
-  });
 
-  console.log('sell trade: ' + tradeDB);
-  return tradeDB;
+  try {
+    const tradeDB = await SellTrade.create({
+      // figure out why 'express-async-errors' doesn't work here
+      pair,
+      buyPrice: averagePrice.toFixed(4),
+      sellPrice: sellPrice.toFixed(4),
+      amountToSell,
+      binanceTradeID,
+      buyTrade: _id,
+    });
+
+    console.log(
+      `Sell order created! [${pair}] Sell price: ${sellPrice} Procent: ${sellProcent}`
+    );
+    return tradeDB;
+  } catch (err) {
+    console.error(err);
+  }
 }
 
 // Buy all trades that should be bought
@@ -97,7 +121,7 @@ async function runBuyer(ms) {
     setInterval(async () => {
       const activeTrades = await getActiveTrades();
       const tradesBought = await buyActiveTrades(state, activeTrades);
-      console.log('Trades bought:', tradesBought);
+
       state = await initializeState();
     }, ms);
   });
