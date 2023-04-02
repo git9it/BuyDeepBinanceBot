@@ -19,6 +19,7 @@ import initTasks from './utils/initTasks.js';
 import runBuyer from './main-controller.js';
 
 import consoleLogMiddleware from './middleware/logger.js';
+import consoleToTxtMiddleware from './middleware/txtlogger.js';
 
 app.use(
   cors({
@@ -28,6 +29,12 @@ app.use(
     optionsSuccessStatus: 204,
   })
 );
+app.use(consoleToTxtMiddleware);
+app.use(express.json());
+app.use('/api/v1/trades', tradeRouter);
+app.use('/api/v1/selltrades/', sellTradeRouter);
+app.use(notFoundMiddleware);
+app.use(errorHandlerMiddleware);
 
 const server = app.listen(process.env.PORT || 5000, () => {
   console.log(`Server is listening on port ${server.address().port}...`);
@@ -41,11 +48,6 @@ const server = app.listen(process.env.PORT || 5000, () => {
 
     const wss = await websocketServer(server);
     app.use(consoleLogMiddleware(wss));
-    app.use(express.json());
-    app.use('/api/v1/trades', tradeRouter);
-    app.use('/api/v1/selltrades/', sellTradeRouter);
-    app.use(errorHandlerMiddleware);
-    app.use(notFoundMiddleware);
 
     const ISACTIVE = process.env.ISACTIVE;
     if (ISACTIVE === 'true') {
