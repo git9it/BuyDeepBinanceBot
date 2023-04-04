@@ -3,11 +3,7 @@ import BadRequestError from '../errors/bad-request.js';
 import NotFoundError from '../errors/not-found.js';
 import createStore from '../store/createStore.js';
 import actionsReducer from '../store/actionReducer.js';
-import {
-  GETPAIRPRICEBYINTERVAL,
-  GETCANDLESBYINTERVAL,
-  GETALLUSERS,
-} from '../store/actions.js';
+import { GETCANDLESBYINTERVAL } from '../store/actions.js';
 
 const store = createStore(actionsReducer);
 

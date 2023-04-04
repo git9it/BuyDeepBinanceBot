@@ -15,8 +15,8 @@ import notFoundMiddleware from './middleware/not-found.js';
 
 import tradeRouter from './routes/tradeRoutes.js';
 import sellTradeRouter from './routes/sellTradeRoutes.js';
-import initTasks from './utils/initTasks.js';
-import runBuyer from './main-controller.js';
+import { initTasks, initCheckTasks } from './utils/initTasks.js';
+import { runBuyer, runTradesChecker } from './main-controller.js';
 
 import consoleLogMiddleware from './middleware/logger.js';
 import consoleToTxtMiddleware from './middleware/txtlogger.js';
@@ -53,9 +53,23 @@ const server = app.listen(process.env.PORT || 5000, () => {
     if (ISACTIVE === 'true') {
       console.log('Server is active');
       initTasks();
+      initCheckTasks();
       runBuyer(5000);
+      runTradesChecker(4000);
     }
   } catch (error) {
     console.log(error);
   }
 })();
+
+process.on('uncaughtException', async (err, origin) => {
+  console.error(`Caught exception: ${err}\n` + `Exception origin: ${origin}`);
+
+  // process.exit(1);
+});
+
+process.on('unhandledRejection', async (reason, promise) => {
+  console.error('Unhandled Rejection at:', promise, 'reason:', reason);
+
+  process.exit(1);
+});

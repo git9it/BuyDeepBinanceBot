@@ -6,9 +6,7 @@ import actionsReducer from '../store/actionReducer.js';
 import {
   GETPAIRPRICEBYINTERVAL,
   GETCANDLESBYINTERVAL,
-  GETALLUSERS,
 } from '../store/actions.js';
-
 
 const store = createStore(actionsReducer);
 
@@ -62,12 +60,6 @@ export default async (expressServer) => {
 
             store.dispatch({ type: GETCANDLESBYINTERVAL, payload: pair });
           }
-
-          if (parsedMessage.users) {
-            store.dispatch({ type: GETALLUSERS });
-          }
-
-
         } catch (error) {
           console.log(error);
         }

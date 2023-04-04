@@ -2,7 +2,6 @@ import { buyAsset, sellAsset } from './api/buySell.js';
 import { getState, stopFetching } from './api/fetchData.js';
 import Trade from './models/BuyTrade.js';
 import SellTrade from './models/SellTrade.js';
-import 'express-async-errors';
 
 // Get active trades from database
 async function getActiveTrades() {
@@ -12,6 +11,28 @@ async function getActiveTrades() {
   );
   console.log(`Found ${activeTrades.length} active trades`);
   return activeTrades;
+}
+
+async function getActiveSellTrades() {
+  const trades = await SellTrade.find();
+  const activeTrades = trades.filter((trade) =>
+    trade.status.includes('Active')
+  );
+  console.log(`Found ${activeTrades.length} active sell trades`);
+  return activeTrades;
+}
+
+async function checkActiveSellTrades(state, activeSellTrades) {
+  const complitedTrades = activeSellTrades.filter((trade) =>
+    isTradeComplete(trade)
+  );
+
+  return complitedTrades;
+}
+
+async function isTradeComplete(trade) {
+  const { status } = trade;
+  return status === 'FILLED';
 }
 
 // Check if a trade should be bought
@@ -35,6 +56,12 @@ async function newStatusTradeDB(tradeId) {
   return item;
 }
 
+async function completedStatusSellTradeDB(tradeId) {
+  const newStatus = { status: 'Completed' };
+  const item = await Trade.findOneAndUpdate({ _id: tradeId }, newStatus);
+  return item;
+}
+
 // Calculate the weighted average price
 function calculateAveragePrice(fills) {
   let totalCost = 0;
@@ -44,12 +71,16 @@ function calculateAveragePrice(fills) {
     totalCost += parseFloat(fill.price) * parseFloat(fill.qty);
     totalQty += parseFloat(fill.qty);
   }
+  const averagePrice = totalCost / totalQty;
+  const averagePriceTrimmed = averagePrice.toFixed(4);
 
-  return totalCost / totalQty;
+  return averagePriceTrimmed;
 }
 
 function priceWithInterest(avgPrice, procent) {
-  return avgPrice * (1 + procent / 100);
+  const priceWithInterest = avgPrice * (1 + procent / 100);
+  const priceWithInterestTrimmed = priceWithInterest.toFixed(22);
+  return priceWithInterestTrimmed;
 }
 
 // Buy a trade and return the result
@@ -76,27 +107,29 @@ async function placeSellOrder(trade, averagePrice) {
   // sell the same amount we bought
   const amountToSell = amountToBuy;
   const sellPrice = priceWithInterest(averagePrice, sellProcent);
-
-  const result = await sellAsset(pair, amountToSell, sellPrice);
-  const binanceTradeID = result.clientOrderId;
+  let tradeDB;
 
   try {
-    const tradeDB = await SellTrade.create({
-      // figure out why 'express-async-errors' doesn't work here
+    tradeDB = await SellTrade.create({
       pair,
-      buyPrice: averagePrice.toFixed(4),
-      sellPrice: sellPrice.toFixed(4),
+      buyPrice: averagePrice,
+      sellPrice: Number(sellPrice).toFixed(4),
       amountToSell,
-      binanceTradeID,
+      status: 'Processing',
       buyTrade: _id,
     });
+  } catch (err) {
+    console.error(err);
+  }
 
+  const result = await sellAsset(pair, amountToSell, sellPrice);
+  if (result) {
+    const binanceTradeID = result.clientOrderId;
     console.log(
       `Sell order created! [${pair}] Sell price: ${sellPrice} Procent: ${sellProcent}`
     );
-    return tradeDB;
-  } catch (err) {
-    console.error(err);
+    const newStatus = { status: 'Active', binanceTradeID: binanceTradeID };
+    await SellTrade.findOneAndUpdate({ _id: tradeDB._id }, newStatus);
   }
 }
 
@@ -127,4 +160,28 @@ async function runBuyer(ms) {
   });
 }
 
-export default runBuyer;
+//
+async function finishTrades(trades) {
+  const tradesFinished = await Promise.all(
+    trades.map(completedStatusSellTradeDB)
+  );
+}
+
+async function runTradesChecker(ms) {
+  console.log('runTradesChecker');
+  setImmediate(async () => {
+    let state = await initializeState();
+    setInterval(async () => {
+      const activeSellTrades = await getActiveSellTrades();
+      const completedTrades = await checkActiveSellTrades(
+        state,
+        activeSellTrades
+      );
+      console.log(completedTrades);
+      finishTrades(completedTrades);
+      state = await initializeState();
+    }, ms);
+  });
+}
+
+export { runBuyer, runTradesChecker };

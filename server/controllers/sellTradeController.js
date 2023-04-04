@@ -3,7 +3,6 @@ import BadRequestError from '../errors/bad-request.js';
 import NotFoundError from '../errors/not-found.js';
 
 const getAllSellTrades = async (req, res) => {
-
   const trades = await SellTrade.find();
   res.status(200).json(trades);
 };

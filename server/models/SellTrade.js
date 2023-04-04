@@ -24,13 +24,15 @@ const TradeSchema = new mongoose.Schema(
     },
     binanceTradeID: {
       type: String,
-      //required: [true, 'Please provide binance trade ID'],
-      maxlength: 8,
+      maxlength: 22,
     },
     status: {
       type: String,
-      enum: ['Active', 'Paused', 'Canceled', 'Completed'],
+      enum: ['Active', 'Processing', 'Paused', 'Canceled', 'Completed'],
       default: 'Active',
+    },
+    error: {
+      type: String,
     },
     buyTrade: {
       type: mongoose.Types.ObjectId,

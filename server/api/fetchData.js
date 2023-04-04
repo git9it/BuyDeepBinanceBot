@@ -1,4 +1,9 @@
 import client from '../helpers/binance.js';
+import createStore from '../store/createStore.js';
+import actionsReducer from '../store/actionReducer.js';
+import { BUYERROR } from '../store/actions.js';
+
+const store = createStore(actionsReducer);
 
 let state = {};
 let intervalIDsStore = {};
@@ -16,57 +21,64 @@ async function getPairPriceByInterval(symbol, interval = 2000) {
   }
 }
 
-async function getCandlesByInterval(symbol, interval = 10000) {
+async function getCandlesByInterval(pair, interval = 10000) {
   const intervalID = setInterval(getCandles, interval);
-  intervalIDsStore = { ...intervalIDsStore, [symbol]: intervalID };
+  intervalIDsStore = { ...intervalIDsStore, [pair]: intervalID };
   async function getCandles() {
     const date = new Date(Date.now());
-    const candles = await client.candles({ symbol: symbol, limit: 1 });
-    state = {
-      data: {
-        ...state?.data,
-        candles: {
-          ...state?.data?.candles,
-          [symbol]: { ...candles },
-          updated: date,
+
+    try {
+      const candles = await client.candles({ symbol: pair, limit: 1 });
+      state = {
+        data: {
+          ...state?.data,
+          candles: {
+            ...state?.data?.candles,
+            [pair]: { ...candles },
+            updated: date,
+          },
         },
-      },
-    };
-    console.log(`${date}: ${JSON.stringify(state)}`);
+      };
+      console.log(`${date}: ${JSON.stringify(state)}`);
+    } catch (err) {
+      store.dispatch({ type: BUYERROR, payload: { err, pair } });
+    }
   }
 }
 
-async function checkOpenedSellTradeByInterval(tradeID, symbol) {
+async function checkOpenedSellTradeByInterval({ pair, binanceTradeID }) {
+  console.log(arguments);
   const tenMinutes = 1000 * 60 * 10;
-  const intervalID = setInterval(getOpenedSellTrade, tenMinutes);
+  const intervalID = setInterval(getOpenedSellTrade, 20000);
   async function getOpenedSellTrade() {
     const date = new Date(Date.now());
     const order = await client.getOrder({
-      symbol: symbol,
-      orderId: tradeID,
+      symbol: pair,
+      origClientOrderId: binanceTradeID,
     });
-
+    console.log(order);
     state = {
       data: {
         ...state?.data,
         orders: {
           ...state?.data?.orders,
-          [tradeID]: { ...order },
+          [binanceTradeID]: { ...order },
           updated: date,
         },
       },
     };
   }
-}
-
-function getState() {
-  return state;
 }
 
 function stopFetching(symbol) {
   const intervalID = intervalIDsStore[symbol];
   clearInterval(intervalID);
   delete intervalIDsStore[symbol];
+  console.log(`Stop fetching [${symbol}]`);
+}
+
+function getState() {
+  return state;
 }
 
 export {
