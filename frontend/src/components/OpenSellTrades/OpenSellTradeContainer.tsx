@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import TradeSellItem from '../SellTradeItem/SellTradeItem';
 import { IsellTrade } from '../../features/trade/sellTradeSlice';
 import { AppDispatch, RootState } from '../../app/store';
+import {deleteSellTrade} from '../../features/trade/sellTradeSlice';
 
 function OpenSellTradesContainer() {
   const dispatch = useDispatch<AppDispatch>();
@@ -16,7 +17,7 @@ function OpenSellTradesContainer() {
 
   const handleDeleteTrade = (tradeId: string) => {
     console.log('deleteTrade', tradeId);
-    // dispatch(deleteTrade(tradeId));
+     dispatch(deleteSellTrade(tradeId));
   };
 
   if (allSellTrades.length === 0) {

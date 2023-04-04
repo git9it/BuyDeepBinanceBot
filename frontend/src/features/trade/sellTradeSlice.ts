@@ -1,7 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
-
 export interface IsellTrade {
   pair: string;
   buyPrice: string;
@@ -15,12 +14,26 @@ export interface IsellTrade {
 
 const url = 'http://localhost:5000/api/v1/selltrades/';
 
-export const getAllSellTrades = createAsyncThunk('trade/getAllSellTrades', async () => {
-  console.log('getAllSellTrades');
-  return axios.get(url)
-    .then((res) => res.data)
-    .catch((err) => console.log(err));
-});
+export const getAllSellTrades = createAsyncThunk(
+  'trade/getAllSellTrades',
+  async () => {
+    console.log('getAllSellTrades');
+    return axios
+      .get(url)
+      .then((res) => res.data)
+      .catch((err) => console.log(err));
+  }
+);
+
+export const deleteSellTrade = createAsyncThunk(
+  'trade/deleteTrade',
+  async (tradeId: string) => {
+    return axios
+      .delete(url + tradeId)
+      .then((res) => res.data)
+      .catch((err) => console.log(err.message));
+  }
+);
 
 export const tradeSellSlice = createSlice({
   name: 'trade',
@@ -46,9 +59,20 @@ export const tradeSellSlice = createSlice({
       })
       .addCase(getAllSellTrades.rejected, (state) => {
         state.isLoading = false;
+      })
+      .addCase(deleteSellTrade.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(deleteSellTrade.fulfilled, (state, action) => {
+        console.log(action);
+
+        state.isLoading = false;
+      })
+      .addCase(deleteSellTrade.rejected, (state) => {
+        state.isLoading = false;
       });
-      
   },
 });
 
-export const { reducer: tradeSellReducer, actions: tradeSellActions } = tradeSellSlice;
+export const { reducer: tradeSellReducer, actions: tradeSellActions } =
+  tradeSellSlice;
