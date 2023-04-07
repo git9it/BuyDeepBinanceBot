@@ -1,0 +1,41 @@
+version: '3'
+services:
+  binance-buy-deep-bot-fe:
+    image: binance-buy-deep-bot-fe
+    build: ./frontend
+    stdin_open: true
+    ports:
+      - '3000:3000'
+    networks:
+      - bot_network
+    volumes:
+      - ./frontend:/usr/src/app/frontend
+      - /usr/src/app/frontend/node_modules
+  binance-buy-deep-bot:
+    image: binance-buy-deep-bot
+    build: ./server
+    ports:
+      - '5000:5000'
+    networks:
+      - bot_network
+    volumes:
+      - ./server:/usr/src/app/server
+      - /usr/src/app/server/node_modules
+    depends_on:
+      - mongo
+  mongo:
+    image: mongo:4.4-bionic
+    ports:
+      - '27017:27017'
+    networks:
+      - bot_network
+    volumes:
+      - mongodata:/data/db
+
+networks:
+  bot_network:
+    driver: bridge
+
+volumes:
+  mongodata:
+    driver: local
