@@ -55,7 +55,7 @@ const server = app.listen(process.env.PORT || 5000, () => {
       initTasks();
       initCheckTasks();
       runBuyer(5000);
-      runTradesChecker(4000);
+      runTradesChecker(7000);
     }
   } catch (error) {
     console.log(error);

@@ -23,15 +23,39 @@ async function getActiveSellTrades() {
 }
 
 async function checkActiveSellTrades(state, activeSellTrades) {
-  const complitedTrades = activeSellTrades.filter((trade) =>
-    isTradeComplete(trade)
-  );
+  if (state?.data?.orders) {
+    // const complitedTrades = state.data.orders.filter((order) =>
+    //   isTradeComplete(order)
+    // );
+    // return complitedTrades;
+    // console.log();
+    let idAndStatusArray = [];
+    const ordersForCheck = state.data.orders;
+    console.log('orders for check', ordersForCheck);
+    for (let key in ordersForCheck) {
+      const orderID = ordersForCheck[key].clientOrderId;
+      const status = ordersForCheck[key].status;
+      const dbID = ordersForCheck[key].dbID;
+      const array = [dbID, orderID, status];
+      idAndStatusArray = [...idAndStatusArray, array];
+    }
+    console.log('idAndStatusArray', idAndStatusArray);
 
-  return complitedTrades;
+    const complitedTrades = idAndStatusArray.filter((order) =>
+      isTradeComplete(order)
+    );
+
+    return complitedTrades;
+  } else {
+    return [];
+  }
 }
 
-async function isTradeComplete(trade) {
-  const { status } = trade;
+function isTradeComplete(order) {
+  console.log('isTradeComplete', order);
+  const status = order[2];
+  console.log('status ', status);
+  console.log(status === 'FILLED');
   return status === 'FILLED';
 }
 
@@ -56,9 +80,12 @@ async function newStatusTradeDB(tradeId) {
   return item;
 }
 
-async function completedStatusSellTradeDB(tradeId) {
+async function completedStatusSellTradeDB(trade) {
+  const tradeDbID = trade[0];
+  console.log(tradeDbID);
   const newStatus = { status: 'Completed' };
-  const item = await Trade.findOneAndUpdate({ _id: tradeId }, newStatus);
+  const item = await SellTrade.findOneAndUpdate({ _id: tradeDbID }, newStatus);
+  console.log('completedStatusSellTradeDB', item);
   return item;
 }
 
@@ -72,15 +99,15 @@ function calculateAveragePrice(fills) {
     totalQty += parseFloat(fill.qty);
   }
   const averagePrice = totalCost / totalQty;
-  const averagePriceTrimmed = averagePrice.toFixed(4);
+  const averagePriceTrimmed = averagePrice.toFixed(2);
 
-  return averagePriceTrimmed;
+  return Number(averagePriceTrimmed);
 }
 
 function priceWithInterest(avgPrice, procent) {
   const priceWithInterest = avgPrice * (1 + procent / 100);
-  const priceWithInterestTrimmed = priceWithInterest.toFixed(22);
-  return priceWithInterestTrimmed;
+  const priceWithInterestTrimmed = priceWithInterest.toFixed(2);
+  return Number(priceWithInterestTrimmed);
 }
 
 // Buy a trade and return the result
@@ -113,7 +140,7 @@ async function placeSellOrder(trade, averagePrice) {
     tradeDB = await SellTrade.create({
       pair,
       buyPrice: averagePrice,
-      sellPrice: Number(sellPrice).toFixed(4),
+      sellPrice: sellPrice,
       amountToSell,
       status: 'Processing',
       buyTrade: _id,
@@ -162,23 +189,28 @@ async function runBuyer(ms) {
 
 //
 async function finishTrades(trades) {
+  console.log('finishTrades these should be finish ', trades);
   const tradesFinished = await Promise.all(
     trades.map(completedStatusSellTradeDB)
   );
+  console.log(tradesFinished);
+  return tradesFinished;
 }
 
 async function runTradesChecker(ms) {
   console.log('runTradesChecker');
   setImmediate(async () => {
     let state = await initializeState();
+    console.log('runTradesChecker state', state);
+
     setInterval(async () => {
       const activeSellTrades = await getActiveSellTrades();
       const completedTrades = await checkActiveSellTrades(
         state,
         activeSellTrades
       );
-      console.log(completedTrades);
-      finishTrades(completedTrades);
+
+      const finishedTrades = await finishTrades(completedTrades);
       state = await initializeState();
     }, ms);
   });

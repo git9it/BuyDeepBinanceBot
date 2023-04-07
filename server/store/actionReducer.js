@@ -38,9 +38,13 @@ const actionsReducer = async (state = initialState, action) => {
   }
 
   if (action.type === CHECKOPENEDSELLTRADES) {
-    const { pair, binanceTradeID } = action.payload;
+    const { pair, binanceTradeID, dbID } = action.payload;
     console.log(pair, binanceTradeID);
-    sh.publish('checkOpenedSellTradeByInterval', { pair, binanceTradeID });
+    sh.publish('checkOpenedSellTradeByInterval', {
+      pair,
+      binanceTradeID,
+      dbID,
+    });
     // console.log(action.payload);
   }
 
@@ -86,8 +90,7 @@ const actionsReducer = async (state = initialState, action) => {
         error: `${err.message}`,
       });
     }
-    console.log(`[${pair}] SELL ERROR: ${err}`); //TODO i should add new sell trade after bot bought asset, add new status "Processing", and --
-    //TODO -- update db with binance transaction id / or add error status here if transaction failed
+    console.log(`[${pair}] SELL ERROR: ${err}`);
   } else {
     return state;
   }

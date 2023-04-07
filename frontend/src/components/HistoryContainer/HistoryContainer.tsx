@@ -20,10 +20,6 @@ function OpenTradesContainer() {
     dispatch(deleteTrade(tradeId));
   };
 
-  if (allTrades.length === 0) {
-    return <h2>No trades to display...</h2>;
-  }
-
   const shouldRender = allTrades.some((trade: Itrade) =>
     showArray.includes(trade.status)
   );

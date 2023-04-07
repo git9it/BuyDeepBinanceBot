@@ -6,6 +6,8 @@ import TradeItem from '../TradeItem/TradeItem';
 import { Itrade } from '../../features/trade/tradeSlice';
 import { AppDispatch, RootState } from '../../app/store';
 
+const showArray = ['Active', 'Paused'];
+
 function OpenTradesContainer() {
   const dispatch = useDispatch<AppDispatch>();
   const { allTrades } = useSelector((store: RootState) => store.trade);
@@ -41,7 +43,7 @@ function OpenTradesContainer() {
               <TradeItem
                 handleDeleteTrade={handleDeleteTrade}
                 key={trade._id}
-                showStatus={['Active']}
+                showStatus={showArray}
                 {...trade}
               />
             );

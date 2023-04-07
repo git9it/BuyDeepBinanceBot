@@ -32,7 +32,11 @@ const initCheckTasks = async () => {
     console.log(trade);
     store.dispatch({
       type: CHECKOPENEDSELLTRADES,
-      payload: { pair: trade.pair, binanceTradeID: trade.binanceTradeID },
+      payload: {
+        pair: trade.pair,
+        binanceTradeID: trade.binanceTradeID,
+        dbID: trade._id,
+      },
     });
   }
 };

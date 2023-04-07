@@ -46,27 +46,32 @@ async function getCandlesByInterval(pair, interval = 10000) {
   }
 }
 
-async function checkOpenedSellTradeByInterval({ pair, binanceTradeID }) {
+async function checkOpenedSellTradeByInterval({ pair, binanceTradeID, dbID }) {
   console.log(arguments);
   const tenMinutes = 1000 * 60 * 10;
   const intervalID = setInterval(getOpenedSellTrade, 20000);
   async function getOpenedSellTrade() {
     const date = new Date(Date.now());
-    const order = await client.getOrder({
-      symbol: pair,
-      origClientOrderId: binanceTradeID,
-    });
-    console.log(order);
-    state = {
-      data: {
-        ...state?.data,
-        orders: {
-          ...state?.data?.orders,
-          [binanceTradeID]: { ...order },
-          updated: date,
+
+    try {
+      const order = await client.getOrder({
+        symbol: pair,
+        origClientOrderId: binanceTradeID,
+      });
+
+      state = {
+        data: {
+          ...state?.data,
+          orders: {
+            ...state?.data?.orders,
+            [binanceTradeID]: { ...order, dbID: dbID },
+          },
         },
-      },
-    };
+      };
+      console.log(state);
+    } catch (error) {
+      console.error(error);
+    }
   }
 }
 
