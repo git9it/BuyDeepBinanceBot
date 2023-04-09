@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import TradeItem from '../TradeItem/TradeItem';
 import { Itrade } from '../../features/trade/tradeSlice';
 import { AppDispatch, RootState } from '../../app/store';
+import { Htag } from '../Htag/Htag';
 
 const showArray = ['Active', 'Paused'];
 
@@ -21,13 +22,13 @@ function OpenTradesContainer() {
   };
 
   if (allTrades.length === 0) {
-    return <h2>No trades to display...</h2>;
+    return <Htag tag="h2">No trades to display...</Htag>;
   }
 
   return (
     <>
       <section className="flex flex-col p-2 bg-green-800">
-        <h1>Open Trades</h1>
+        <Htag tag="h1">Open Buy Trades</Htag>
         <div className="mx-auto overflow-hidden bg-gray-100 rounded-lg max-">
           <div className="grid grid-cols-7 gap-4 px-4 py-2 font-medium text-gray-600 uppercase border-b border-gray-200 shrink-0">
             <div className="col-span-1">pair</div>

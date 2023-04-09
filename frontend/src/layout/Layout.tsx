@@ -7,7 +7,7 @@ export const Layout = ({ children }: LayoutProps): JSX.Element => {
   return (
     <>
       <Header />
-      <div>{children}</div>
+      <div className="flex flex-col bg-white">{children}</div>
       <Logger />
     </>
   );

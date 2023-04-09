@@ -83,7 +83,7 @@ const PairSelector: React.FC<Props> = ({ options, updatePairValue }) => {
     <div className="relative p-3">
       <input
         type="text"
-        placeholder="Search..."
+        placeholder="Pair"
         className="w-56 px-4 py-3 font-thin duration-100 rounded shadow focus:outline-none focus:shadow-lg focus:shadow-slate-200 shadow-gray-100"
         onChange={handleInputChange}
         value={selectedOption || inputValue?.toUpperCase()}

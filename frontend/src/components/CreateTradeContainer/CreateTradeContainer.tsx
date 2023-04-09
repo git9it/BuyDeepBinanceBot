@@ -9,6 +9,7 @@ import Button from '../Button/Button';
 import { createTrade } from '../../features/trade/tradeSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../app/store';
+import { Htag } from '../Htag/Htag';
 
 const initialState = {
   pair: '',
@@ -43,14 +44,13 @@ function CreateTradeContainer() {
   };
 
   return (
-    <div className="flex flex-col items-center h-full bg-gray-400">
-      <div className="m-4 mx-auto overflow-hidden bg-gray-100 rounded-lg">
+    <div className="flex flex-col items-center">
+      <div className="m-4 mx-auto overflow-hidden bg-gray-300 rounded-lg shadow-md">
         <form className="form" onSubmit={onSubmit}>
-          <h1>Pair</h1>
           <PairSelector updatePairValue={updatePairValue} options={SYMBOLS} />
-          <h1>Buy if</h1>
+          <Htag tag="h3">Buy if</Htag>
           <Buy handleChange={handleChange} values={values} />
-          <h1>Sell if</h1>
+          <Htag tag="h3">Sell if</Htag>
           <Sell handleChange={handleChange} values={values} />
 
           <Button type="submit" />
