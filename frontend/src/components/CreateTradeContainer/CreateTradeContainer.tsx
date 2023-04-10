@@ -53,7 +53,7 @@ function CreateTradeContainer() {
           <Htag tag="h3">Sell if</Htag>
           <Sell handleChange={handleChange} values={values} />
 
-          <Button type="submit" />
+          <Button type="submit">Add</Button>
         </form>
       </div>
     </div>

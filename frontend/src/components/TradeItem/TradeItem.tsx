@@ -1,4 +1,4 @@
-import React from 'react';
+import Button from '../Button/Button';
 
 interface ItradeItem {
   pair: string;
@@ -25,15 +25,15 @@ function TradeItem({
   if (shouldRender) {
     return (
       <>
-        <div className="grid grid-cols-7 gap-4 px-4 py-2 border-b border-gray-200">
+        <div className="grid grid-cols-6 gap-4 px-4 py-2 border-b border-gray-200">
           <div className="col-span-1">{pair}</div>
           <div className="col-span-1">{sellProcent}</div>
           <div className="col-span-1">{status}</div>
           <div className="col-span-1">{timeFrame}</div>
           <div className="col-span-1">{volumeSold}</div>
-          <div className="col-span-1">{_id}</div>
+
           <div onClick={() => handleDeleteTrade(_id)} className="col-span-1">
-            delete
+            <button>x</button>
           </div>
         </div>
       </>

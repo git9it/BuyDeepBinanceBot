@@ -6,7 +6,7 @@ function Header() {
   return (
     <>
       <div className="flex bg-black">
-        <img className="w-1/2 py-4 pl-4 h-1/2" src={svgDataUri} alt="Logo" />
+        <img className="w-2/5 py-4 pl-4 h-2/5" src={svgDataUri} alt="Logo" />
       </div>
     </>
   );

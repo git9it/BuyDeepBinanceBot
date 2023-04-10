@@ -30,31 +30,31 @@ function OpenTradesContainer() {
 
   return (
     <>
-      <section className="flex flex-col p-2">
+      <section className="flex flex-col items-center p-2 align-middle">
         <Htag tag="h1">History</Htag>
-        <div className="mx-auto overflow-hidden bg-gray-100 rounded-lg shadow-md ">
-          <div className="grid flex-shrink-0 min-w-0 grid-cols-7 gap-4 px-4 py-2 font-medium text-gray-600 uppercase border-b border-gray-200 min-w-600">
-            <div className="col-span-1">pair</div>
-            <div className="col-span-1">sellPercent</div>
-            <div className="col-span-1">status</div>
-            <div className="col-span-1">timeFrame</div>
-            <div className="col-span-1">volumeSold</div>
-            <div className="col-span-1">_id</div>
-            <div className="col-span-1">delete</div>
+        <div className="pt-4">
+          <div className="overflow-hidden bg-gray-100 rounded-lg shadow-md">
+            <div className="grid grid-cols-6 gap-4 px-4 py-2 font-medium text-gray-600 uppercase border-b border-gray-200 ">
+              <div className="col-span-1">pair</div>
+              <div className="col-span-1">sellPercent</div>
+              <div className="col-span-1">status</div>
+              <div className="col-span-1">timeFrame</div>
+              <div className="col-span-1">volumeSold</div>
+              <div className="col-span-1">delete</div>
+            </div>
+
+            {allTrades.map((trade: Itrade) => {
+              return (
+                <TradeItem
+                  handleDeleteTrade={handleDeleteTrade}
+                  key={trade._id}
+                  showStatus={showArray}
+                  {...trade}
+                />
+              );
+            })}
           </div>
-          {allTrades.map((trade: Itrade) => {
-            return (
-              <TradeItem
-                handleDeleteTrade={handleDeleteTrade}
-                key={trade._id}
-                showStatus={showArray}
-                {...trade}
-              />
-            );
-          })}
         </div>
-        <div></div>
-        <div></div>
       </section>
     </>
   );
