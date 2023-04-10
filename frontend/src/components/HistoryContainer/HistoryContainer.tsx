@@ -34,7 +34,7 @@ function OpenTradesContainer() {
         <Htag tag="h1">History</Htag>
         <div className="pt-4">
           <div className="overflow-hidden bg-gray-100 rounded-lg shadow-md">
-            <div className="grid grid-cols-6 gap-4 px-4 py-2 font-medium text-gray-600 uppercase border-b border-gray-200 ">
+            <div className="grid grid-cols-6 gap-4 px-4 py-2 font-medium text-center text-gray-600 uppercase border-b border-gray-200 ">
               <div className="col-span-1">pair</div>
               <div className="col-span-1">sellPercent</div>
               <div className="col-span-1">status</div>
