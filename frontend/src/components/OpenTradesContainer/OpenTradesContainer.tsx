@@ -6,6 +6,7 @@ import TradeItem from '../TradeItem/TradeItem';
 import { Itrade } from '../../features/trade/tradeSlice';
 import { AppDispatch, RootState } from '../../app/store';
 import { Htag } from '../Htag/Htag';
+import { GiBuyCard } from 'react-icons/gi';
 
 const showArray = ['Active', 'Paused'];
 
@@ -28,16 +29,19 @@ function OpenTradesContainer() {
   return (
     <>
       <section className="flex flex-col items-center p-2">
-        <Htag tag="h1">Open Buy Trades</Htag>
+        <Htag tag="h1">
+          <GiBuyCard />
+          Open Buy Trades
+        </Htag>
         <div className="pt-4">
           <div className="mx-auto overflow-hidden bg-gray-100 rounded-lg max-">
-            <div className="grid grid-cols-6 gap-4 px-4 py-2 font-medium text-center text-gray-600 uppercase border-b border-gray-200  shrink-0">
-              <div className="col-span-1">pair</div>
-              <div className="col-span-1">sellPercent</div>
-              <div className="col-span-1">status</div>
-              <div className="col-span-1">timeFrame</div>
-              <div className="col-span-1">volumeSold</div>
-              <div className="col-span-1">delete</div>
+            <div className="grid grid-cols-6 gap-4 px-4 py-2 font-medium text-center text-gray-600 uppercase border-b border-gray-200 shrink-0">
+              <div className="col-span-1 truncate">pair</div>
+              <div className="col-span-1 truncate">sellPercent</div>
+              <div className="col-span-1 truncate">status</div>
+              <div className="col-span-1 truncate">timeFrame</div>
+              <div className="col-span-1 truncate">volumeSold</div>
+              <div className="col-span-1 truncate">delete</div>
             </div>
             {allTrades.map((trade: Itrade) => {
               return (
